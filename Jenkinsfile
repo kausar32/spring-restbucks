@@ -50,11 +50,7 @@ pipeline {
             steps {
                 dir('server') {
                     sh '''
-                    trivy image \
-                    --scanners vuln \
-                    --pkg-types os \
-                    --format table \
-                    restbucks:latest
+                    trivy image kausar32/restbucks:latest
                     '''
                 }
             }
