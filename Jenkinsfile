@@ -83,9 +83,10 @@ pipeline {
                 docker rm restbucks-app || true
  
                 docker run -d \
-                --name restbucks-app \
-                -p 8081:8080 \
-                restbucks:latest
+  --name restbucks-app \
+  -p 8081:8080 \
+  kausar32/restbucks:latest
+ 
                 '''
             }
         }
