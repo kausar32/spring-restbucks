@@ -14,13 +14,14 @@ pipeline {
             }
         }
  
-        stage('Build') {
-            steps {
-                dir('server') {
-                    sh 'mvn clean package'
-                }
-            }
+        stage('Docker Build') {
+    steps {
+        dir('server') {
+            sh 'docker build -t kausar32/restbucks:latest .'
         }
+    }
+}
+ 
  
         stage('SonarQube Analysis') {
             steps {
@@ -58,6 +59,22 @@ pipeline {
                 }
             }
         }
+        stage('Push to Docker Hub') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+        )]) {
+ 
+            sh '''
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            docker push kausar32/restbucks:latest
+            docker logout
+            '''
+        }
+    }
+}
  
         stage('Deploy') {
             steps {
