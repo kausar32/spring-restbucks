@@ -13,6 +13,13 @@ pipeline {
                     url: 'https://github.com/kausar32/spring-restbucks.git'
             }
         }
+        stage('Build') {
+    steps {
+        dir('server') {
+            sh 'mvn clean package'
+        }
+    }
+}
  
     
  
