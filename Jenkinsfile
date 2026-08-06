@@ -14,14 +14,7 @@ pipeline {
             }
         }
  
-        stage('Docker Build') {
-    steps {
-        dir('server') {
-            sh 'docker build -t kausar32/restbucks:latest .'
-        }
-    }
-}
- 
+    
  
         stage('SonarQube Analysis') {
             steps {
