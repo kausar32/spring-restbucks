@@ -13,23 +13,16 @@ pipeline {
                     url: 'https://github.com/kausar32/spring-restbucks.git'
             }
         }
-  stage('Build') {
-    steps {
-        dir('server') {
-            sh '''
-            java -version
-            javac -version
-            mvn -version
-            echo $JAVA_HOME
  
-            mvn clean package
-            '''
+        stage('Build') {
+            steps {
+                dir('server') {
+                    sh '''
+                    mvn clean package
+                    '''
+                }
+            }
         }
-    }
-}
- 
- 
-    
  
         stage('SonarQube Analysis') {
             steps {
@@ -63,22 +56,22 @@ pipeline {
                 }
             }
         }
-        stage('Push to Docker Hub') {
-    steps {
-        withCredentials([usernamePassword(
-            credentialsId: 'dockerhub',
-            usernameVariable: 'DOCKER_USER',
-            passwordVariable: 'DOCKER_PASS'
-        )]) {
  
-            sh '''
-            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-            docker push kausar32/restbucks:latest
-            docker logout
-            '''
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                    docker push kausar32/restbucks:latest
+                    docker logout
+                    '''
+                }
+            }
         }
-    }
-}
  
         stage('Deploy') {
             steps {
@@ -87,10 +80,9 @@ pipeline {
                 docker rm restbucks-app || true
  
                 docker run -d \
-  --name restbucks-app \
-  -p 8081:8080 \
-  kausar32/restbucks:latest
- 
+                  --name restbucks-app \
+                  -p 8081:8080 \
+                  kausar32/restbucks:latest
                 '''
             }
         }
