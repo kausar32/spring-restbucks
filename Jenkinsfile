@@ -33,7 +33,7 @@ pipeline {
             steps {
                 dir('server') {
                     sh '''
-                    docker build -t restbucks:latest .
+                    docker build -t kausar32/restbucks:latest .
                     '''
                 }
             }
